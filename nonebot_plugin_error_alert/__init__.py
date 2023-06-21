@@ -24,7 +24,8 @@ __plugin_meta__ = PluginMetadata(
 /error_alert subscribe <cron>：订阅错误告警。但不会在发生错误时立即发送告警，而是在满足cron表达式的时间点统一发送该时间段发生的错误告警。
 /error_alert unsubscribe：取消订阅错误告警。
     """.strip(),
-    homepage="https://github.com/bot-kuraku/nonebot-plugin-error-alert",
+    homepage="https://github.com/bot-ssttkkl/nonebot-plugin-error-alert",
+    type="application",
     config=Config,
     supported_adapters=nonebot_plugin_saa.__plugin_meta__.supported_adapters
 )
