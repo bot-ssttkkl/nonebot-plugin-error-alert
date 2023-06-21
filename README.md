@@ -3,6 +3,8 @@ nonebot-plugin-error-alert
 
 当Bot发生运行错误时发送消息提醒
 
+（插件基于截获logger的ERROR级别日志实现，其他插件在Matcher运行过程抛出异常，或是记录ERROR级别的日志，都将当作Bot运行错误处理）
+
 ## 卖家秀
 
 ![1](img/1.png)
@@ -20,6 +22,10 @@ nonebot-plugin-error-alert
 ### `/error_alert unsubscribe`
 
 取消订阅错误告警。
+
+### `/error_alert show`
+
+查看本账号订阅的错误告警。
 
 ## 配置项
 
