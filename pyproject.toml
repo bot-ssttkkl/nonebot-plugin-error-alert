@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "nonebot-plugin-error-alert"
+version = "0.1.0"
+description = ""
+authors = ["ssttkkl <huang.wen.long@hotmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "nonebot_plugin_error_alert"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+nonebot2 = "^2.0.0"
+nonebot-plugin-apscheduler = ">=0.2.0"
+nonebot-plugin-send-anything-anywhere = "^0.2"
+nonebot-plugin-datastore = ">=0.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
