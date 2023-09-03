@@ -1,6 +1,6 @@
 import traceback
 from io import StringIO
-from typing import Optional, NamedTuple, Type, Callable, Any
+from typing import Optional, NamedTuple, Type, Callable, Any, List
 
 from nonebot import get_plugin_by_module_name
 from nonebot import logger
@@ -8,15 +8,20 @@ from nonebot.internal.adapter import Event
 from nonebot.log import default_format
 
 from . import MODULE_NAME
+from .config import conf
 
 
 class ErrorAlert(NamedTuple):
     summary: str
+    module_name: str
+    plugins: List[str]
     exc_type: Optional[Type[BaseException]]
 
     @classmethod
     async def convert(cls, msg) -> "ErrorAlert":
         record = msg.record
+        module_name = msg.record["name"]
+        plugins = []
 
         with StringIO() as sio:
             if record["message"]:
@@ -29,7 +34,6 @@ class ErrorAlert(NamedTuple):
 
             if record["exception"] is not None:
                 event: Optional[Event] = None
-                plugins = []
                 last_frame = None
 
                 tb = record["exception"].traceback
@@ -63,6 +67,8 @@ class ErrorAlert(NamedTuple):
                 sio.write(f"进程：{record['process'].name} (tid: {record['process'].id})\n")
 
             return ErrorAlert(summary=sio.getvalue().strip(),
+                              module_name=module_name,
+                              plugins=[p.name for p in plugins],
                               exc_type=type(record["exception"].value) if record["exception"] is not None else None)
 
 
@@ -86,6 +92,19 @@ def remove_observer(key: str):
 
 async def handler(msg):
     alert = await ErrorAlert.convert(msg)
+
+    if conf.error_alert_plugins_blacklist is not None and any(
+            map(lambda p: p in conf.error_alert_plugins_blacklist, alert.plugins)):
+        if alert.module_name in conf.error_alert_plugins_blacklist:  # 判断非异常错误
+            logger.debug("skipped error alert")
+            return
+
+    if conf.error_alert_plugins_whitelist is not None and not any(
+            map(lambda p: p in conf.error_alert_plugins_whitelist, alert.plugins)):
+        if alert.module_name not in conf.error_alert_plugins_whitelist:  # 判断非异常错误
+            logger.debug("skipped error alert")
+            return
+
     for ob in _observers.values():
         ob(alert)
 

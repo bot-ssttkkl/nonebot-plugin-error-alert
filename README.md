@@ -37,6 +37,18 @@ nonebot-plugin-error-alert
 
 默认值：`True`
 
+### `error_alert_plugins_blacklist`
+
+当错误涉及指定插件时不进行报错，设为`None`时不启用
+
+默认值：`None`
+
+### `error_alert_plugins_whitelist`
+
+仅当错误涉及指定插件时不进行报错，设为`None`时不启用
+
+默认值：`None`
+
 ## LICENSE
 
 MIT License

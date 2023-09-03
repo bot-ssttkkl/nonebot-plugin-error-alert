@@ -1,6 +1,6 @@
 from io import StringIO
 
-from nonebot import on_shell_command, Bot, on_command
+from nonebot import on_shell_command, Bot
 from nonebot.exception import ParserExit
 from nonebot.internal.adapter import Event
 from nonebot.internal.matcher import Matcher
@@ -52,8 +52,3 @@ async def handle_cmd(state: T_State, matcher: Matcher, bot: Bot, event: Event):
     elif args.action == "unsubscribe":
         await unsubscribe(bot, event)
         await matcher.send("ok")
-
-
-# @on_command("raise").handle()
-# def _():
-#     raise RuntimeError("Oops")
