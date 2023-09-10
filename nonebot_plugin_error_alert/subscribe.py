@@ -50,9 +50,16 @@ class ImmediateObserver:
 
     def __call__(self, alert: ErrorAlert):
         async def _():
+            bot = None
+            try:
+                bot = get_bot(self.subscribe.bot_id)
+            except ValueError:
+                logger.warning(f"bot {self.subscribe.bot_id} is not connected yet.")
+                return
+
             try:
                 await MessageFactory(Text(alert.summary)).send_to(self.subscribe.target,
-                                                                  bot=get_bot(self.subscribe.bot_id))
+                                                                  bot=bot)
             except BaseException as e:
                 logger.exception(e)
 
